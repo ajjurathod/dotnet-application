@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0
 WORKDIR /app
 
 # Copy the csproj file (replace with actual path if necessary)
-COPY YourAppName.csproj ./
+COPY src/YourAppName.csproj ./
 
 # Restore dependencies
 RUN dotnet restore
