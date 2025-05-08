@@ -1,23 +1,20 @@
-# Use the official .NET SDK image to build and run the application
-FROM mcr.microsoft.com/dotnet/sdk:6.0
+# Use the official .NET SDK image to build and run the app in a single stage
+FROM mcr.microsoft.com/dotnet/sdk:7.0
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the csproj file (replace with actual path if necessary)
-COPY src/YourAppName.csproj ./
+# Copy the project files and restore dependencies
+COPY . .
 
-# Restore dependencies
-RUN dotnet restore
+# Build and publish the application to the /app directory
+RUN dotnet publish -c Release -o /app/published
 
-# Copy the rest of the application files
-COPY . ./
+# Set the working directory to the published output folder
+WORKDIR /app/published
 
-# Publish the application in Release mode
-RUN dotnet publish -c Release -o /app/publish
-
-# Expose the application port
+# Expose port 80 for the application
 EXPOSE 80
 
-# Set the entry point for the application
-ENTRYPOINT ["dotnet", "/app/publish/YourAppName.dll"]
+# Run the application
+ENTRYPOINT ["dotnet", "YourApp.dll"]
