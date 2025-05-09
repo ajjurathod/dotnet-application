@@ -1,20 +1,15 @@
-# Use the official .NET SDK image to build and run the app in a single stage
-FROM mcr.microsoft.com/dotnet/sdk:7.0
+# Use the official .NET SDK image to build and run the app
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the project files and restore dependencies
-COPY . .
+# Copy project files and restore dependencies
+COPY . . 
+RUN dotnet restore "eShopOnWeb.API/eShopOnWeb.API.csproj"
 
-# Build and publish the application to the /app directory
-RUN dotnet publish -c Release -o /app/published
+# Build and publish the application in Release mode
+RUN dotnet publish "eShopOnWeb.API.csproj" -c Release -o out
 
-# Set the working directory to the published output folder
-WORKDIR /app/published
-
-# Expose port 80 for the application
-EXPOSE 80
-
-# Run the application
-ENTRYPOINT ["dotnet", "YourApp.dll"]
+# Set the entrypoint to run the app
+ENTRYPOINT ["dotnet", "out/eShopOnWeb.API.dll"]
